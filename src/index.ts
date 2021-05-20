@@ -9,7 +9,7 @@ app.use(express.json());
 
 
 app.get('/', (req, res, next) => {
-  res.send('The sedulous hyena ate the antelope!');
+  res.send('Hello from Karen lol 🙋‍♀️');
 });
 
 app.listen(port, () => {
