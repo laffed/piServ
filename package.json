@@ -4,7 +4,8 @@
   "description": "",
   "main": "output/index.js",
   "scripts": {
-    "start": "npm install && npx rollup -c rollup.config.js && cd output && node bundle.js"
+    "bundle": "npm install && npx rollup -c rollup.config.js",
+    "start": "cd output && node bundle.js"
   },
   "author": "",
   "license": "ISC",
