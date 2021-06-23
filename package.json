@@ -2,9 +2,9 @@
   "name": "piservtest",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "output/index.js",
   "scripts": {
-    "start": "tsc && node dist/index.js"
+    "start": "npm install && npx rollup -c rollup.config.js && cd output && node bundle.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,9 +13,11 @@
     "cors": "^2.8.5",
     "dotenv": "^9.0.2",
     "express": "^4.17.1",
+    "rollup": "^2.52.2",
     "selenium-webdriver": "^4.0.0-beta.3"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "^8.2.1",
     "@types/cors": "^2.8.10",
     "@types/express": "^4.17.11",
     "tslint": "^6.1.3",
