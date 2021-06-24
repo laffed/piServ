@@ -65,9 +65,10 @@ const clocker = async (method: 'check' | 'clock'): Promise<PromiseObj> => {
         button = await driver.findElement(By.id('clockout'));
         status = 'out';
       }
+      console.log(button);
 
       if (button !== false) {
-        button.click();
+        await button.click();
         //send confirmation
         return {success: true, status};
       }
@@ -96,7 +97,7 @@ const clocker = async (method: 'check' | 'clock'): Promise<PromiseObj> => {
 
     if (method === 'check') {
       res = await get_status();
-    } else {
+    } else if (method === 'clock') {
       res = await do_clock_event();
     }
 
