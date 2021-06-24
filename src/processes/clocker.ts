@@ -2,11 +2,11 @@ import {Builder, By, Key, WebElement} from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome';
 import ENV from '../config';
 
-type PromiseObj = {success: boolean, status: 'in' | 'out' | 'err'};
+type PromiseObj = {success: boolean, status: 'in' | 'out' | 'err' | 'good'};
 
-const clocker = async (method: 'check' | 'clock'): Promise<PromiseObj> => {
+const clocker = async (method: 'check' | 'clock' | 'login', req_user: string, req_pw: string): Promise<PromiseObj> => {
   let res: PromiseObj = {success: false, status: 'err'};
-
+  const timeClockTxt = 'Click here to access the time clock';
   const driver = await new Builder().forBrowser('chrome')
     .setChromeOptions(
       new chrome.Options().headless().windowSize({width: 100, height: 60})
@@ -15,6 +15,20 @@ const clocker = async (method: 'check' | 'clock'): Promise<PromiseObj> => {
 
   await driver.manage().window().maximize();
   await driver.get('https://www.cnc-claimsource.com');
+
+  const login = async (): Promise<boolean> => {
+    if (await element_exists('username', 'id')) {
+      await driver.findElement(By.id('username')).sendKeys(req_user);
+      await driver.findElement(By.id('password')).sendKeys(req_pw);
+      await driver.findElement(By.id('loginBtn')).click();
+
+      if (!(await element_exists(timeClockTxt, 'inner'))) {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
 
   const element_exists = async (val: string, type: 'id' | 'inner'): Promise<boolean> => {
     try {
@@ -66,7 +80,6 @@ const clocker = async (method: 'check' | 'clock'): Promise<PromiseObj> => {
         button = await driver.findElement(By.id('clockout'));
         status = 'out';
       }
-      console.log(button);
 
       if (button !== false) {
         await button.sendKeys(Key.ENTER);
@@ -83,29 +96,20 @@ const clocker = async (method: 'check' | 'clock'): Promise<PromiseObj> => {
   }
 
   // Start of main calls
-  const timeClockTxt = 'Click here to access the time clock';
-  if (await element_exists('username', 'id')) {
-    await driver.findElement(By.id('username')).sendKeys(ENV.cncUsr);
-    await driver.findElement(By.id('password')).sendKeys(ENV.cncPw);
-    await driver.findElement(By.id('loginBtn')).click();
-
-    if (!(await element_exists(timeClockTxt, 'inner'))) {
-      await driver.quit();
-      return {success: false, status: 'err'};
-    }
-
-    await driver.findElement(By.linkText(timeClockTxt)).click();
-
-    if (method === 'check') {
-      res = await get_status();
-    } else if (method === 'clock') {
-      res = await do_clock_event();
-    }
-
-  } else {
-    res.success = false;
-    res.status = 'err';
+  const loginStatus = await login();
+  if (method === 'login') {
+    await driver.quit();
+    return {success: loginStatus, status: loginStatus ? 'good' : 'err'}
   }
+
+  await driver.findElement(By.linkText(timeClockTxt)).click();
+
+  if (method === 'check') {
+    res = await get_status();
+  } else if (method === 'clock') {
+    res = await do_clock_event();
+  }
+
   await driver.quit();
   return res;
 }

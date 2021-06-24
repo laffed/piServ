@@ -2,6 +2,7 @@ declare namespace NodeJS {
   export interface ProcessEnv {
     NODE_ENV: 'development' | 'production';
     PORT: string;
+    SELF_KEY: string;
     CNC_USR: string;
     CNC_PW: string;
     DRIVER_PATH: string;
