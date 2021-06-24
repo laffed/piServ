@@ -69,7 +69,7 @@ const clocker = async (method: 'check' | 'clock'): Promise<PromiseObj> => {
       console.log(button);
 
       if (button !== false) {
-        await button.click();
+        await button.submit();
         //send confirmation
         return {success: true, status};
       }
