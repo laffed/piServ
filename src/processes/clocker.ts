@@ -13,6 +13,7 @@ const clocker = async (method: 'check' | 'clock'): Promise<PromiseObj> => {
     )
     .build();
 
+  await driver.manage().window().maximize();
   await driver.get('https://www.cnc-claimsource.com');
 
   const element_exists = async (val: string, type: 'id' | 'inner'): Promise<boolean> => {
