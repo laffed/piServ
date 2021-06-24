@@ -1,4 +1,4 @@
-import {Builder, By, WebElement} from 'selenium-webdriver';
+import {Builder, By, Key, WebElement} from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome';
 import ENV from '../config';
 
@@ -69,7 +69,7 @@ const clocker = async (method: 'check' | 'clock'): Promise<PromiseObj> => {
       console.log(button);
 
       if (button !== false) {
-        await button.submit();
+        await button.sendKeys(Key.ENTER);
         //send confirmation
         return {success: true, status};
       }
